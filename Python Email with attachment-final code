@@ -1,0 +1,27 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+fromaddress = "maninthesky@gmail.com"
+toaddress = "carr999@gmail.com" 
+msg = MIMEMultipart()
+msg['From'] = fromaddress
+msg['To'] = toaddress
+msg['Subject'] = "Test email"
+body = "Hello" 
+msg.attach(MIMEText(body, 'plain')) 
+filename = "myfile.txt"
+attachment = open("F:\\D\\OneDrive\\Python\\Spyder\\myfile.txt", "rb")
+part = MIMEBase('application', 'octet-stream')
+part.set_payload((attachment).read())
+encoders.encode_base64(part)
+part.add_header('Content-Disposition', "attachment; filename= %s" % filename) 
+msg.attach(part) 
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.starttls()
+server.login(fromaddress, "password")
+text = msg.as_string()
+server.sendmail(fromaddress, toaddress, text)
+server.quit()
+
